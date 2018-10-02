@@ -15,10 +15,10 @@
 		607FACE51AFB9204008FA782 /* KBProgressHUD_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KBProgressHUD_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		8CA0D5A69011D5D959C365C1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		9A75FCD302B5C697448B6F9E /* KBProgressHUD.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = KBProgressHUD.podspec; path = ../KBProgressHUD.podspec; sourceTree = "<group>"; };
+		8CA0D5A69011D5D959C365C1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		9A75FCD302B5C697448B6F9E /* KBProgressHUD.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = KBProgressHUD.podspec; path = ../KBProgressHUD.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A7661F656DC31446669C8249 /* Pods-KBProgressHUD_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KBProgressHUD_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KBProgressHUD_Tests/Pods-KBProgressHUD_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		AA9A37C292AE515D3B763D5C /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		AA9A37C292AE515D3B763D5C /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		DC5D5FE0CD421553540AB910 /* Pods_KBProgressHUD_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KBProgressHUD_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E224E89AC8E2069D2066A179 /* Pods-KBProgressHUD_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KBProgressHUD_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KBProgressHUD_Tests/Pods-KBProgressHUD_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,10 +130,6 @@
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
-					607FACCF1AFB9204008FA782 = {
-						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0900;
-					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						LastSwiftMigration = 0900;
