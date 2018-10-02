@@ -1,15 +1,15 @@
 //
-//  KBProgressViewController.swift
-//  KBProgressViewController
+//  KBProgressHUD.swift
+//  KBProgressHUD
 //
 //  Created by Kamlesh Bokdia on 10/2/18.
 //
 
 import UIKit
 
-public class KBProgressViewController: UIViewController {
+public class KBProgressHUD: UIViewController {
     
-    static let shared = KBProgressViewController()
+    static let shared = KBProgressHUD()
     
     let activityView: UIView = {
         let activityView = UIView()
@@ -63,16 +63,16 @@ public class KBProgressViewController: UIViewController {
         window.makeKeyAndVisible()
         
         DispatchQueue.main.async {
-            KBProgressViewController.shared.modalPresentationStyle = .overCurrentContext
-            KBProgressViewController.shared.activityIndicator.startAnimating()
-            window.rootViewController?.present(KBProgressViewController.shared, animated: false, completion: nil)
+            KBProgressHUD.shared.modalPresentationStyle = .overCurrentContext
+            KBProgressHUD.shared.activityIndicator.startAnimating()
+            window.rootViewController?.present(KBProgressHUD.shared, animated: false, completion: nil)
         }
     }
     
     static public func dismiss() {
         DispatchQueue.main.async {
-            KBProgressViewController.shared.activityIndicator.stopAnimating()
-            KBProgressViewController.shared.dismiss(animated: false, completion: nil)
+            KBProgressHUD.shared.activityIndicator.stopAnimating()
+            KBProgressHUD.shared.dismiss(animated: false, completion: nil)
         }
         
     }
