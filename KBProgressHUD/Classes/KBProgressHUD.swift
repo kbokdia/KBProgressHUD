@@ -10,6 +10,7 @@ import UIKit
 public class KBProgressHUD: UIViewController {
     
     static let shared = KBProgressHUD()
+    var isActive = false
     
     let activityView: UIView = {
         let activityView = UIView()
@@ -59,22 +60,29 @@ public class KBProgressHUD: UIViewController {
     }
     
     static public func show() {
+        KBProgressHUD.shared.activityIndicator.startAnimating()
+        
+        if KBProgressHUD.shared.isActive {
+            return
+        }
+        
         guard let window = UIApplication.shared.keyWindow else { return }
         window.makeKeyAndVisible()
         
-        DispatchQueue.main.async {
-            KBProgressHUD.shared.modalPresentationStyle = .overCurrentContext
-            KBProgressHUD.shared.activityIndicator.startAnimating()
-            window.rootViewController?.present(KBProgressHUD.shared, animated: false, completion: nil)
-        }
+        KBProgressHUD.shared.modalPresentationStyle = .overCurrentContext
+        window.rootViewController?.present(KBProgressHUD.shared, animated: false, completion: nil)
+        
+        KBProgressHUD.shared.isActive = true
     }
     
     static public func dismiss() {
-        DispatchQueue.main.async {
-            KBProgressHUD.shared.activityIndicator.stopAnimating()
-            KBProgressHUD.shared.dismiss(animated: false, completion: nil)
+        if !KBProgressHUD.shared.isActive {
+            return
         }
         
+        KBProgressHUD.shared.activityIndicator.stopAnimating()
+        KBProgressHUD.shared.dismiss(animated: false, completion: nil)
+        KBProgressHUD.shared.isActive = false
     }
     
 }
