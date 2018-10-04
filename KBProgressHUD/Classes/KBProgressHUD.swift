@@ -7,11 +7,52 @@
 
 import UIKit
 
-public class KBProgressHUD: UIViewController {
+public class KBProgressHUD {
     
-    static var isActive = false
-    var messageConstraints: [NSLayoutConstraint]?
-    var nonMessageConstraints: [NSLayoutConstraint]?
+    static var presentedHUD: KBProgressHUDView? = nil
+    
+    static public func showMessage(_ message: String) {
+        show(message: message)
+    }
+    
+    static public func show(message: String? = nil) {
+        guard let window = UIApplication.shared.keyWindow else { return }
+        
+        var hudView: KBProgressHUDView!
+        if let presentedView = KBProgressHUD.presentedHUD {
+            hudView = presentedView
+        }
+        else {
+            hudView = KBProgressHUDView()
+            KBProgressHUD.presentedHUD = hudView
+            window.addSubview(hudView)
+        }
+        
+        hudView.frame = window.frame
+        hudView.alpha = 1
+        hudView.messageLabel.text = message
+        hudView.setNeedsUpdateConstraints()
+    }
+    
+    static public func dismiss() {
+        guard let hudView = KBProgressHUD.presentedHUD else { return }
+        hudView.alpha = 0
+        hudView.messageLabel.text = nil
+    }
+    
+}
+
+
+class KBProgressHUDView: UIView {
+    
+    var viewContraints: [NSLayoutConstraint]?
+    
+    let backgroundView: UIView = {
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        return backgroundView
+    }()
     
     let activityView: UIView = {
         let activityView = UIView()
@@ -30,6 +71,7 @@ public class KBProgressHUD: UIViewController {
     let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
         indicator.color = UIColor.gray
+        indicator.startAnimating()
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
@@ -43,97 +85,59 @@ public class KBProgressHUD: UIViewController {
         return label
     }()
     
-    override public func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = UIColor.white.withAlphaComponent(0)
-        
-        activityView.addSubview(activityIndicator)
-        activityView.addSubview(messageLabel)
-        view.addSubview(activityView)
-        //        setupConstraints()
-        
-        activityIndicator.startAnimating()
+    override func updateConstraints() {
+        updateViewConstraints()
+        super.updateConstraints()
     }
     
-    public override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    func updateViewConstraints() {
         
-        updateConstraints()
-    }
-    
-    func updateConstraints() {
-        
-        if let constraints = messageConstraints {
+        if let constraints = viewContraints {
             NSLayoutConstraint.deactivate(constraints)
         }
         
-        if let constraints = nonMessageConstraints {
-            NSLayoutConstraint.deactivate(constraints)
-        }
-        
-        var constraints = [NSLayoutConstraint]()
+        var constraints = [
+            backgroundView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            activityView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            activityView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            activityIndicator.topAnchor.constraint(equalTo: activityView.topAnchor, constant: 12),
+            ]
         
         if let message = messageLabel.text, message.count > 0 {
-            constraints = [
-                activityView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                activityView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                activityIndicator.topAnchor.constraint(equalTo: activityView.topAnchor, constant: 12),
+            constraints.append(contentsOf: [
                 activityIndicator.centerXAnchor.constraint(equalTo: activityView.centerXAnchor),
                 activityIndicator.bottomAnchor.constraint(equalTo: messageLabel.topAnchor, constant: -8),
                 messageLabel.leadingAnchor.constraint(equalTo: activityView.leadingAnchor, constant: 12),
                 messageLabel.topAnchor.constraint(equalTo: activityIndicator.bottomAnchor,constant: 8),
                 messageLabel.trailingAnchor.constraint(equalTo: activityView.trailingAnchor, constant: -12),
                 messageLabel.bottomAnchor.constraint(equalTo: activityView.bottomAnchor, constant: -12)
-            ]
-            messageConstraints = constraints
+                ])
         }
         else {
-            constraints = [
-                activityView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                activityView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                activityIndicator.topAnchor.constraint(equalTo: activityView.topAnchor, constant: 12),
+            constraints.append(contentsOf: [
                 activityIndicator.leadingAnchor.constraint(equalTo: activityView.leadingAnchor, constant: 12),
                 activityIndicator.bottomAnchor.constraint(equalTo: activityView.bottomAnchor, constant: -12),
                 activityIndicator.trailingAnchor.constraint(equalTo: activityView.trailingAnchor, constant: -12)
-            ]
-            
-            nonMessageConstraints = constraints
+                ])
         }
         
-        
+        viewContraints = constraints
         NSLayoutConstraint.activate(constraints)
     }
     
-    static public func showMessage(_ message: String) {
-        //        KBProgressHUD.shared.messageLabel.text = message
-        show(message: message)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        activityView.addSubview(activityIndicator)
+        activityView.addSubview(messageLabel)
+        addSubview(backgroundView)
+        addSubview(activityView)
     }
     
-    static public func show(message: String? = nil) {
-        if KBProgressHUD.isActive {
-            return
-        }
-        
-        guard let window = UIApplication.shared.keyWindow else { return }
-        window.makeKeyAndVisible()
-        
-        let hudVC = KBProgressHUD()
-        hudVC.messageLabel.text = message
-        hudVC.modalPresentationStyle = .overCurrentContext
-        window.rootViewController?.present(hudVC, animated: false, completion: nil)
-        
-        KBProgressHUD.isActive = true
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
-    
-    static public func dismiss() {
-        guard let window = UIApplication.shared.keyWindow,
-            let hudVC = window.rootViewController?.presentedViewController as? KBProgressHUD else { return }
-        
-        hudVC.activityIndicator.stopAnimating()
-        hudVC.messageLabel.text = nil
-        hudVC.dismiss(animated: false, completion: nil)
-        KBProgressHUD.isActive = false
-    }
-    
 }
